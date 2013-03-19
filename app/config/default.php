@@ -1,5 +1,5 @@
 <?php
-define('__PATH__', '/web/');
+define('__PATH__', '/MongoTask/web/');
 
 // Database connection
 define('DB_HOST', 'mongo_host');
