@@ -31,15 +31,13 @@ class Layout extends System {
                 'js_url'        => self::location(false, true, false),
                 'js_path'       => __PATH__,
                 'js_static_url' => self::static_location(false, true),
-                'load_css'      => self::loadDefaultCss(),
-                'body_id'       => 'body'.rand(1, 4)
+                'load_css'      => self::loadDefaultCss()
             )
         );
 
         // Determinando qual template chama (user online ou off)
         if (self::isLogged() === true) {
             $_u_tpl = 'online';
-
             Models::load('Users');
             $_user = ModelUsers::findOne(Array('_id'=>self::myId()));
         } else {

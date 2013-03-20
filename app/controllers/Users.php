@@ -52,13 +52,24 @@ class ControllerUsers extends Controllers
 	            
 		            $_user = ModelUsers::newUser();
 		            if (is_array($_user)) {
-		                
+		                ModelUsers::login($_user['email'], $_user['password']);
+		                self::redirect(self::location('home', true));
 		            } else {
-		                
-		            }
-		            
+		                self::redirect(self::location('users/signin/?error=true', true));
+		            }		            
 		        }
 		    }
-		    
+		}
+		
+		public static function doLogin()
+		{
+		    ModelUsers::login($_POST['username'], self::passwd($_POST['password']));
+		    self::redirect(self::location('home', true));
+		}
+		
+		public static function doLogout()
+		{
+		    ModelUsers::logout();
+		    self::redirect(self::location(false, true));
 		}
 }

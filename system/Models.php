@@ -96,9 +96,22 @@ class Models extends System
     {
         if(is_array($_args)) {
             self::Collection()->save($_args);
+            return $_args;
+        } else {
+            return false;
         }
     }
 
+    public static function insert($_args = false)
+    {
+        if(is_array($_args)) {
+            self::Collection()->insert($_args);
+            return $_args;
+        } else {
+            return false;
+        }
+    }
+    
     public static function findOne($_args = false) 
     {
         if(is_array($_args)) {
@@ -132,19 +145,14 @@ class Models extends System
         return true;
     }
 
-    public static function load ($_model=false) 
+    public static function load ($_name=false) 
     {
-        if ($_model !== false) {
-            // Model exists?
-            if (file_exists(DIR_APP . 'models/' . $_model . 'Model.php')) {
-                include_once DIR_APP . 'models/' . $_model . 'Model.php';
-                eval('$objModel = new Model' . $_model . '();');
-                return $objModel;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
+            // File exists
+        $_file = DIR_MODELS . $_name . '.php';
+				
+        if (file_exists($_file) === true) {
+        		include_once $_file;
+            eval('$obj = new Model' . $_name . '();');
         }
     }
 }

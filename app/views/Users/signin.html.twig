@@ -1,10 +1,10 @@
 <div class="container">
     <div class="row">
         <div class="span6">
-            <form class="form">
+            <form class="form" method="post" action="{{ url }}users/doLogin">
                 <h2 class="form-heading">Entrar</h2>
-                <input type="text" class="input-block-level" placeholder="E-mail">
-                <input type="password" class="input-block-level" placeholder="Senha">
+                <input type="text" name="username" class="input-block-level" placeholder="E-mail">
+                <input type="password" name="password" class="input-block-level" placeholder="Senha">
                 <label class="checkbox">
                   <input type="checkbox" value="remember-me"> Lembrar-se
                 </label>

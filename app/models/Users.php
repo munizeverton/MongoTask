@@ -21,7 +21,7 @@ class ModelUsers extends Models
         
         
         // Verify if user exists
-        $_user = self::findOne(Array(
+        $_user = ModelUsers::findOne(Array(
                         'email' => $_POST['email']
         ));        
         if (!is_array($_user)) {
@@ -42,35 +42,40 @@ class ModelUsers extends Models
                             'create_project' => false,
                             'create_ticket'  => true
             );
+            $_data['stats'] = Array(
+                            'last_login' => false,
+                            'last_activity' => false,
+                            'logins' => 0
+                            );
             $_data['locale'] = 'UTC';
-            return self::save($_data);
+            ModelUsers::insert($_data);
+            return $_data;
         } else {
             return false;
         }
     }
 
 
-    public static function login()
+    public static function login($_username = false, $_password = false)
     {
         ModelUsers::connect();
-        $_data = $_POST['form'];
-        $_data['password'] = self::passwd($_data['password']);
 
         $_find = Array(
             '$or' => Array(
                 Array(
-                    'email' => $_data['username'],
-                    'password' => $_data['password']
+                    'email' => $_username,
+                    'password' => $_password
                 ),
                 Array(
-                    'username' => $_data['username'],
-                    'password' => $_data['password']
+                    'username' => $_username,
+                    'password' => $_password
                 ),
             )
         );
         $_user = ModelUsers::findOne($_find);
 
         if (is_array($_user)) {
+            
             $_SESSION['online']       = true;
             $_SESSION['online_since'] = time();
             $_SESSION['uid']          = $_user['_id']->__toString();
@@ -78,12 +83,11 @@ class ModelUsers extends Models
             $_user['stats']['last_login']    = new MongoDate(time());
             $_user['stats']['last_activity'] = new MongoDate(time());
             $_user['stats']['logins']++;
-            $_user['stats']['karma'] = $_user['stats']['karma']+0.001;
             ModelUsers::save($_user);
 
-            self::redirect(self::location('wallpapers/my', true));
+            return true;
         } else {
-            self::redirect(self::location('users/login', true));
+            return false;
         }
     }
 
@@ -91,7 +95,6 @@ class ModelUsers extends Models
     {
         unset($_SESSION);
         session_destroy();
-        self::redirect(self::location(false, true));        
     }
 
 }
